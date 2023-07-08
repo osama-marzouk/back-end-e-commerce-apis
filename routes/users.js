@@ -1,21 +1,21 @@
 const express = require('express')
 const router = express.Router()
-const Product = require('../models/product')
+const User = require('../models/user')
 
 router.get('/', async (req, res) => {
-    const products = await Product.find()
-    if (products.length === 0) {
+    const users = await User.find()
+    if (users.length === 0) {
         return res.send('404 Not Found')
     }
-    res.send(products)
+    res.send(users)
 })
 
 router.post('/', (req, res) => {
-    const product = new Product({
+    const user = new User({
         name: req.body.name,
         price: req.body.price
     })
-    product.save().then(() => console.log('product saved')).catch(err => console.log(err))
+    user.save().then(() => console.log('product saved')).catch(err => console.log(err))
 
     res.send('posted')
 })
