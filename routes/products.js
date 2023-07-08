@@ -11,37 +11,59 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    const category = await Category.findById(req.params.id)
-    if (!category) {
+    const product = await Product.findById(req.params.id)
+    if (!product) {
         return res.send('404 Not Found')
     }
-    res.send(category)
+    res.send(product)
 })
 
 router.post('/', (req, res) => {
-    const product = new Product({
-        name: req.body.name,
-        price: req.body.price
-    })
-    product.save().then(() => console.log('product saved')).catch(err => console.log(err))
 
-    res.send('posted')
+    let product = new Product({
+        name: req.body.name,
+        description: req.body.description,
+        richDescription: req.body.richDescription,
+        imgae: req.body.imgae,
+        imgaes: req.body.imgaes,
+        brand: req.body.brand,
+        price: req.body.price,
+        category: req.body.category,
+        countInStock: req.body.countInStock,
+        rating: req.body.rating,
+        numReviews: req.body.numReviews,
+        isFeatured: req.body.isFeatured,
+        dateCreated: req.body.dateCreated
+    })
+    product.save().then(() => res.status(200).send(product)).catch(err => res.status(400).send(err))
+
 })
 
 
 router.put('/:id', async (req, res) => {
-    let category = await Category.findOneAndUpdate({ _id: req.params.id }, {
+    let product = await Product.findOneAndUpdate({ _id: req.params.id }, {
         name: req.body.name,
-        icon: req.body.icon
+        description: req.body.description,
+        richDescription: req.body.richDescription,
+        imgae: req.body.imgae,
+        imgaes: req.body.imgaes,
+        brand: req.body.brand,
+        price: req.body.price,
+        category: req.body.category,
+        countInStock: req.body.countInStock,
+        rating: req.body.rating,
+        numReviews: req.body.numReviews,
+        isFeatured: req.body.isFeatured,
+        dateCreated: req.body.dateCreated
     }, { new: true })
-    if (!category)
-        return res.status(400).send('the category cannot be created!')
-    res.send(category);
+    if (!product)
+        return res.status(400).send('the product cannot be changed!')
+    res.send(product);
 })
 
 router.delete('/:id', (req, res) => {
-    Category.findOneAndRemove(req.params.id)
-        .then(() => res.status(200).send('category deleted'))
+    Product.findOneAndRemove(req.params.id)
+        .then(() => res.status(200).send('product deleted'))
         .catch(err => res.status(400).send(err))
 })
 
