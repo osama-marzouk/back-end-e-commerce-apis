@@ -10,6 +10,14 @@ router.get('/', async (req, res) => {
     res.send(products)
 })
 
+router.get('/:id', async (req, res) => {
+    const category = await Category.findById(req.params.id)
+    if (!category) {
+        return res.send('404 Not Found')
+    }
+    res.send(category)
+})
+
 router.post('/', (req, res) => {
     const product = new Product({
         name: req.body.name,
@@ -20,4 +28,22 @@ router.post('/', (req, res) => {
     res.send('posted')
 })
 
-module.exports = router;
+
+router.put('/:id', async (req, res) => {
+    let category = await Category.findOneAndUpdate({ _id: req.params.id }, {
+        name: req.body.name,
+        icon: req.body.icon
+    }, { new: true })
+    if (!category)
+        return res.status(400).send('the category cannot be created!')
+    res.send(category);
+})
+
+router.delete('/:id', (req, res) => {
+    Category.findOneAndRemove(req.params.id)
+        .then(() => res.status(200).send('category deleted'))
+        .catch(err => res.status(400).send(err))
+})
+
+
+module.exports = router; 

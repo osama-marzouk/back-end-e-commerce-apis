@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema({
-    name: String,
-    price: Number
+    name: {
+        type: String,
+        required: true
+    },
+    icon: {
+        type: String,
+    }
 })
 
 const Category = mongoose.model('categories', schema)
