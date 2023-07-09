@@ -23,18 +23,20 @@ router.get('/:id', async (req, res) => {
 router.post('/', (req, res) => {       //for the admin
 
     //I think you should body of request
-    let hashedPass = bcrypt.hash(req.body.password, 10)
+
     const user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: hashedPass,
+        passwordHash: bcrypt.hashSync(req.body.password, 10),
         phone: req.body.phone,
         isAdmin: req.body.isAdmin,
+        street: req.body.street,
+        apartment: req.body.apartment,
         zip: req.body.zip,
         city: req.body.city,
         country: req.body.country,
-        apartment: req.body.apartment,
-        street: req.body.street,
+
+
     })
     user.save().then(() => res.status(200).send(user)).catch(err => res.status(400).send(err))
 
@@ -47,7 +49,7 @@ router.post('/register', (req, res) => {       //for the user
     const user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: hashedPass,
+        passwordHash: hashedPass,
         phone: req.body.phone,
         isAdmin: req.body.isAdmin,
         zip: req.body.zip,
@@ -65,13 +67,13 @@ router.post('/login', async (req, res) => {
     if (!user) {
         return res.status(400).send('invalid email or passwrod')
     }
-    let validPass = await bcrypt.compare(req.body.password, user.password)
+    let validPass = await bcrypt.compare(req.body.password, user.passwordHash)
     if (!validPass) {
         return res.status(400).send('invalid email or passwrod')
     }
-    const token = jwt.sign({ userId: user.id }, process.env.SECRET)
+    const token = jwt.sign({ userId: user.id, isAdmin: user.isAdmin }, process.env.SECRET)
 
-    res.status(200).json({ sucs: true, massage: 'you are logged in' }).send(token)
+    res.status(200).send(token)
 })
 
 router.put('/:id', async (req, res) => {

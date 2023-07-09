@@ -9,7 +9,7 @@ const schema = mongoose.Schema({
         type: String,
         required: true
     },
-    password: {
+    passwordHash: {
         type: String,
         required: true
     },
@@ -43,8 +43,7 @@ const schema = mongoose.Schema({
     },
 })
 
-schema.virtual('id').get(() => this._id.toHexString())
-schema.set('toJSON', { virtual: true })
+
 
 const User = mongoose.model('users', schema)
 module.exports = User;
