@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Product = require('../models/product')
+const Category = require('../models/category')
 
 router.get('/', async (req, res) => {
     const products = await Product.find()
@@ -19,6 +20,8 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', (req, res) => {
+
+
 
     let product = new Product({
         name: req.body.name,
@@ -66,6 +69,17 @@ router.delete('/:id', (req, res) => {
         .then(() => res.status(200).send('product deleted'))
         .catch(err => res.status(400).send(err))
 })
+
+router.get('/count', async (req, res) => {
+    let productsCount = await Product.countDocuments()
+    res.status(200).send(productsCount)
+})
+
+router.get('/featured', async (req, res) => {
+    let featuredProducts = Product.find({ isFeatured: true })
+    res.status(200).send(featuredProducts)
+})
+
 
 
 module.exports = router; 
